@@ -1,0 +1,129 @@
+:root {
+  --bg: #f2f2f7;
+  --card: #ffffff;
+  --text: #1c1c1e;
+  --muted: #8e8e93;
+  --accent: #ff3b30;
+  --border: #e5e5ea;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --card: #1c1c1e;
+    --text: #f2f2f7;
+    --muted: #8e8e93;
+    --accent: #ff453a;
+    --border: #2c2c2e;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.35 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  padding: env(safe-area-inset-top) max(16px, env(safe-area-inset-right))
+           env(safe-area-inset-bottom) max(16px, env(safe-area-inset-left));
+  -webkit-text-size-adjust: 100%;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 8px;
+}
+
+h1 { font-size: 34px; margin: 0; letter-spacing: -0.5px; }
+
+h2 {
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--muted);
+  font-weight: 600;
+  margin: 24px 0 8px 4px;
+}
+
+h2.today { color: var(--accent); }
+
+ul.day {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+li.event {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+li.event:last-child { border-bottom: none; }
+
+.time {
+  flex: 0 0 64px;
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+}
+
+.time .end { color: var(--muted); display: block; }
+
+.details { min-width: 0; border-left: 3px solid var(--accent); padding-left: 10px; }
+.title { font-weight: 600; overflow-wrap: anywhere; }
+.location { color: var(--muted); font-size: 15px; overflow-wrap: anywhere; }
+
+.status, .error { color: var(--muted); text-align: center; margin-top: 48px; }
+.error { color: var(--accent); margin-top: 8px; }
+
+.banner {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 15px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+form#unlock { margin-top: 32px; text-align: center; }
+
+input, button[type="submit"] {
+  font: inherit;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  margin-top: 8px;
+}
+
+button[type="submit"] { background: var(--accent); color: #fff; border: none; font-weight: 600; }
+
+.icon-button {
+  font-size: 26px;
+  background: none;
+  border: none;
+  color: var(--accent);
+  width: 44px;
+  height: 44px;
+}
+
+.link-button { background: none; border: none; color: var(--accent); font: inherit; font-size: 13px; }
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 24px 4px 32px;
+}

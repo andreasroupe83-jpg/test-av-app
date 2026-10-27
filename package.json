@@ -1,0 +1,14 @@
+{
+  "name": "min-kalender",
+  "version": "1.0.0",
+  "private": true,
+  "description": "En enkel webbapp för iPhone som visar kommande händelser från din kalender.",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-events.mjs",
+    "start": "npm run build && npx --yes serve@14.2.4 dist"
+  },
+  "dependencies": {
+    "ical-expander": "3.2.0"
+  }
+}
