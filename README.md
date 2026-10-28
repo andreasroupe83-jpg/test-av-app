@@ -32,7 +32,7 @@ I repot: **Settings → Secrets and variables → Actions → New repository sec
 
 | Namn         | Värde                                       |
 |--------------|---------------------------------------------|
-| `ICS_URL`    | Kalenderlänken från steg 1                  |
+| `ICS_URL`    | Kalenderlänken från steg 1 – flera länkar går bra, en per rad |
 | `PASSPHRASE` | Ett lösenord du hittar på (används i appen) |
 
 ### 3. Slå på GitHub Pages

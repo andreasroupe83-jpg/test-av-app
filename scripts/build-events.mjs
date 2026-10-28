@@ -1,4 +1,4 @@
-// Hämtar kalendern från ICS_URL, plockar ut kommande händelser och skriver
+// Hämtar kalendrarna från ICS_URL (en länk per rad), plockar ut kommande händelser och skriver
 // dist/events.json. Om PASSPHRASE är satt krypteras innehållet så att bara
 // den som kan lösenordet kan läsa det i appen.
 //
@@ -33,10 +33,18 @@ function mapEvent(item, startDate, endDate) {
   };
 }
 
-async function loadEvents() {
-  const url = ICS_URL.replace(/^webcal:\/\//i, 'https://');
+// ICS_URL kan innehålla flera länkar, en per rad.
+async function loadAllEvents() {
+  const urls = ICS_URL.split(/\s+/).filter(Boolean);
+  const lists = await Promise.all(urls.map((url, i) => loadEvents(url, i + 1)));
+  return lists.flat();
+}
+
+async function loadEvents(rawUrl, number) {
+  const url = rawUrl.replace(/^webcal:\/\//i, 'https://');
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`Kunde inte hämta kalendern: HTTP ${res.status}`);
+  // Visa inte länken i loggen – den är hemlig.
+  if (!res.ok) throw new Error(`Kunde inte hämta kalender nr ${number}: HTTP ${res.status}`);
   const ics = await res.text();
 
   // maxIterations 0 = ingen gräns; säkert eftersom vi alltid har ett slutdatum.
@@ -92,7 +100,7 @@ async function encrypt(plaintext, passphrase) {
 }
 
 const demo = !ICS_URL;
-const events = (demo ? demoEvents() : await loadEvents())
+const events = (demo ? demoEvents() : await loadAllEvents())
   .sort((a, b) => a.start.localeCompare(b.start));
 
 const payload = { generatedAt: now.toISOString(), demo, events };
