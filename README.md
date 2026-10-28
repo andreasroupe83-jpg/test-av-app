@@ -28,9 +28,13 @@ går det inte att läsa dina händelser.
 
 ### Har du ICS-filer i stället?
 
-Lägg dem i mappen (`.txt`-filer som innehåller en kalender går också bra) [`calendars/`](calendars/) (på github.com: öppna mappen →
+Lägg dem i mappen [`calendars/`](calendars/) (på github.com: öppna mappen →
 **Add file → Upload files**). Filerna och länkarna kan blandas fritt.
 Filer uppdateras inte av sig själva – ladda upp en ny version om kalendern ändras.
+
+Filnamnet spelar ingen roll, `.txt` går också bra. En fil kan även innehålla
+kalenderlänkar (en per rad) – men om repot är publikt syns de för alla, så lägg
+då länkarna i `ICS_URL` i stället.
 
 ### 2. Lägg in hemligheter i GitHub
 
@@ -66,6 +70,6 @@ ICS_URL="https://…" npm start      # med din riktiga kalender
 ## Filer
 
 - `public/` – själva appen (HTML, CSS, JavaScript, ikoner)
-- `calendars/` – dina egna .ics-filer
+- `calendars/` – dina egna kalenderfiler
 - `scripts/build-events.mjs` – hämtar och krypterar kalendrarna
 - `.github/workflows/deploy.yml` – kör skriptet och publicerar till GitHub Pages
