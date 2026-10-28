@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Kalender">
+  <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <title>Min kalender</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" href="icons/icon-512.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Min kalender</h1>
+    <button id="refresh" class="icon-button" aria-label="Uppdatera">↻</button>
+  </header>
+
+  <main id="content">
+    <p class="status">Laddar…</p>
+  </main>
+
+  <form id="unlock" hidden>
+    <p>Kalendern är krypterad. Skriv lösenordet (samma som <code>PASSPHRASE</code> i GitHub).</p>
+    <input id="passphrase" type="password" autocomplete="current-password" placeholder="Lösenord" required>
+    <button type="submit">Lås upp</button>
+    <p id="unlock-error" class="error" hidden>Fel lösenord, försök igen.</p>
+  </form>
+
+  <footer>
+    <span id="updated"></span>
+    <button id="lock" class="link-button" hidden>Glöm lösenord</button>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
