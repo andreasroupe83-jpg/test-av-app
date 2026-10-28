@@ -4,4 +4,6 @@ Lägg dina kalenderfiler (`.ics`, eller `.txt` som innehåller en kalender) i de
 
 På github.com: öppna mappen `calendars` → **Add file → Upload files**.
 
-Filerna uppdateras inte av sig själva – ladda upp en ny version om kalendern ändras.
+En fil kan också innehålla en eller flera kalenderlänkar (en per rad). Då hämtas
+kalendern på nytt vid varje uppdatering. En fil med en hel kalender uppdateras
+inte av sig själv – ladda upp en ny version om kalendern ändras.

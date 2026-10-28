@@ -33,18 +33,23 @@ function mapEvent(item, startDate, endDate) {
   };
 }
 
-const urls = (ICS_URL || '').split(/\s+/).filter(Boolean);
-// Filnamnet spelar ingen roll (t.ex. .ics eller .txt) – alla filer som
-// innehåller en kalender (BEGIN:VCALENDAR) tas med.
+const URL_PATTERN = /(?:https?|webcal):\/\/\S+/gi;
+
+const urls = (ICS_URL || '').match(URL_PATTERN) || [];
+
+// Filnamnet spelar ingen roll (t.ex. .ics eller .txt). En fil kan innehålla
+// antingen en hel kalender (BEGIN:VCALENDAR) eller kalenderlänkar.
 const files = [];
 for (const name of await readdir('calendars').catch(() => [])) {
+  if (name === 'README.md') continue;
   const text = await readFile(`calendars/${name}`, 'utf8');
   if (/BEGIN:VCALENDAR/i.test(text)) files.push(text);
+  else urls.push(...(text.match(URL_PATTERN) || []));
 }
 
 async function loadAllEvents() {
   const lists = await Promise.all([
-    ...urls.map((url, i) => fetchIcs(url, i + 1).then(expand)),
+    ...[...new Set(urls)].map((url, i) => fetchIcs(url, i + 1).then(expand)),
     ...files.map(expand),
   ]);
   return lists.flat();
