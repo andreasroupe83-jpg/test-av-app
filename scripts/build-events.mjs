@@ -1,8 +1,8 @@
-// Hämtar kalendrarna från ICS_URL (en länk per rad) och läser alla .ics-filer i
-// mappen calendars/, plockar ut kommande händelser och skriver dist/events.json. Om PASSPHRASE är satt krypteras innehållet så att bara
+// Hämtar kalendrarna från ICS_URL (en länk per rad) och läser alla kalenderfiler
+// i mappen calendars/, plockar ut kommande händelser och skriver dist/events.json. Om PASSPHRASE är satt krypteras innehållet så att bara
 // den som kan lösenordet kan läsa det i appen.
 //
-// Utan ICS_URL och .ics-filer skapas exempelhändelser så att appen går att prova direkt.
+// Utan ICS_URL och kalenderfiler skapas exempelhändelser så att appen går att prova direkt.
 
 import { cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { webcrypto as crypto } from 'node:crypto';
@@ -34,13 +34,18 @@ function mapEvent(item, startDate, endDate) {
 }
 
 const urls = (ICS_URL || '').split(/\s+/).filter(Boolean);
-const files = (await readdir('calendars').catch(() => []))
-  .filter((name) => name.toLowerCase().endsWith('.ics'));
+// Filnamnet spelar ingen roll (t.ex. .ics eller .txt) – alla filer som
+// innehåller en kalender (BEGIN:VCALENDAR) tas med.
+const files = [];
+for (const name of await readdir('calendars').catch(() => [])) {
+  const text = await readFile(`calendars/${name}`, 'utf8');
+  if (/BEGIN:VCALENDAR/i.test(text)) files.push(text);
+}
 
 async function loadAllEvents() {
   const lists = await Promise.all([
     ...urls.map((url, i) => fetchIcs(url, i + 1).then(expand)),
-    ...files.map((name) => readFile(`calendars/${name}`, 'utf8').then(expand)),
+    ...files.map(expand),
   ]);
   return lists.flat();
 }

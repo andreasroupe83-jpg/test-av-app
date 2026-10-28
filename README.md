@@ -28,7 +28,7 @@ går det inte att läsa dina händelser.
 
 ### Har du ICS-filer i stället?
 
-Lägg dem i mappen [`calendars/`](calendars/) (på github.com: öppna mappen →
+Lägg dem i mappen (`.txt`-filer som innehåller en kalender går också bra) [`calendars/`](calendars/) (på github.com: öppna mappen →
 **Add file → Upload files**). Filerna och länkarna kan blandas fritt.
 Filer uppdateras inte av sig själva – ladda upp en ny version om kalendern ändras.
 
