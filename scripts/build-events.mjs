@@ -1,6 +1,7 @@
 // Hämtar kalendrarna från ICS_URL (en länk per rad) och läser alla kalenderfiler
-// i mappen calendars/, plockar ut kommande händelser och skriver dist/events.json. Om PASSPHRASE är satt krypteras innehållet så att bara
-// den som kan lösenordet kan läsa det i appen.
+// i mappen calendars/, plockar ut kommande händelser och skriver dist/events.json.
+// Innehållet krypteras med PASSPHRASE så att bara den som kan lösenordet kan
+// läsa det i appen. På GitHub stoppas bygget om PASSPHRASE saknas.
 //
 // Utan ICS_URL och kalenderfiler skapas exempelhändelser så att appen går att prova direkt.
 
@@ -126,7 +127,12 @@ let output;
 if (PASSPHRASE && !demo) {
   output = { version: 1, encrypted: await encrypt(JSON.stringify(payload), PASSPHRASE) };
 } else {
-  if (!demo) console.warn('Varning: PASSPHRASE saknas – händelserna publiceras okrypterade.');
+  if (!demo && process.env.GITHUB_ACTIONS) {
+    console.error('PASSPHRASE saknas. Lägg till den under Settings → Secrets and variables → Actions,'
+      + ' annars skulle din kalender publiceras okrypterad.');
+    process.exit(1);
+  }
+  if (!demo) console.warn('Varning: PASSPHRASE saknas – händelserna sparas okrypterade (bara lokalt).');
   output = { version: 1, ...payload };
 }
 
