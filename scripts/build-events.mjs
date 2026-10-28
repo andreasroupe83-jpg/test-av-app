@@ -1,10 +1,10 @@
-// Hämtar kalendrarna från ICS_URL (en länk per rad), plockar ut kommande händelser och skriver
-// dist/events.json. Om PASSPHRASE är satt krypteras innehållet så att bara
+// Hämtar kalendrarna från ICS_URL (en länk per rad) och läser alla .ics-filer i
+// mappen calendars/, plockar ut kommande händelser och skriver dist/events.json. Om PASSPHRASE är satt krypteras innehållet så att bara
 // den som kan lösenordet kan läsa det i appen.
 //
-// Utan ICS_URL skapas exempelhändelser så att appen går att prova direkt.
+// Utan ICS_URL och .ics-filer skapas exempelhändelser så att appen går att prova direkt.
 
-import { cp, mkdir, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { webcrypto as crypto } from 'node:crypto';
 import IcalExpander from 'ical-expander';
 
@@ -33,20 +33,27 @@ function mapEvent(item, startDate, endDate) {
   };
 }
 
-// ICS_URL kan innehålla flera länkar, en per rad.
+const urls = (ICS_URL || '').split(/\s+/).filter(Boolean);
+const files = (await readdir('calendars').catch(() => []))
+  .filter((name) => name.toLowerCase().endsWith('.ics'));
+
 async function loadAllEvents() {
-  const urls = ICS_URL.split(/\s+/).filter(Boolean);
-  const lists = await Promise.all(urls.map((url, i) => loadEvents(url, i + 1)));
+  const lists = await Promise.all([
+    ...urls.map((url, i) => fetchIcs(url, i + 1).then(expand)),
+    ...files.map((name) => readFile(`calendars/${name}`, 'utf8').then(expand)),
+  ]);
   return lists.flat();
 }
 
-async function loadEvents(rawUrl, number) {
+async function fetchIcs(rawUrl, number) {
   const url = rawUrl.replace(/^webcal:\/\//i, 'https://');
   const res = await fetch(url);
   // Visa inte länken i loggen – den är hemlig.
   if (!res.ok) throw new Error(`Kunde inte hämta kalender nr ${number}: HTTP ${res.status}`);
-  const ics = await res.text();
+  return res.text();
+}
 
+function expand(ics) {
   // maxIterations 0 = ingen gräns; säkert eftersom vi alltid har ett slutdatum.
   const expander = new IcalExpander({ ics, maxIterations: 0 });
   const { events, occurrences } = expander.between(from, to);
@@ -99,7 +106,7 @@ async function encrypt(plaintext, passphrase) {
   return { salt: b64(salt), iv: b64(iv), iterations: PBKDF2_ITERATIONS, data: b64(new Uint8Array(data)) };
 }
 
-const demo = !ICS_URL;
+const demo = urls.length === 0 && files.length === 0;
 const events = (demo ? demoEvents() : await loadAllEvents())
   .sort((a, b) => a.start.localeCompare(b.start));
 

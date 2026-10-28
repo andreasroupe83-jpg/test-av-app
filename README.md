@@ -26,6 +26,12 @@ går det inte att läsa dina händelser.
 - **Outlook:** Inställningar → Kalender → Delade kalendrar → *Publicera en kalender* →
   kopiera ICS-länken.
 
+### Har du ICS-filer i stället?
+
+Lägg dem i mappen [`calendars/`](calendars/) (på github.com: öppna mappen →
+**Add file → Upload files**). Filerna och länkarna kan blandas fritt.
+Filer uppdateras inte av sig själva – ladda upp en ny version om kalendern ändras.
+
 ### 2. Lägg in hemligheter i GitHub
 
 I repot: **Settings → Secrets and variables → Actions → New repository secret**
@@ -60,5 +66,6 @@ ICS_URL="https://…" npm start      # med din riktiga kalender
 ## Filer
 
 - `public/` – själva appen (HTML, CSS, JavaScript, ikoner)
-- `scripts/build-events.mjs` – hämtar och krypterar kalendern
+- `calendars/` – dina egna .ics-filer
+- `scripts/build-events.mjs` – hämtar och krypterar kalendrarna
 - `.github/workflows/deploy.yml` – kör skriptet och publicerar till GitHub Pages
